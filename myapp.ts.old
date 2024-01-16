@@ -1,0 +1,166 @@
+import express, { json } from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import * as fs from "fs";
+import mysql from "mysql";
+import session from "express-session";
+import redis from "redis";
+import RedisStore from "connect-redis";
+import cookieParser from "cookie-parser";
+
+declare module "express-session" {
+  interface Session {
+    loggedIn?: boolean;
+  }
+}
+
+const app = express();
+const _port = 3000;
+const redisClient = await redis
+  .createClient({
+    socket: {
+      host: 'localhost',
+      port: 6379 ,
+    },
+  })
+  .on("error", (err) =>
+    console.warn("Fehler bei Erstellung von redisClient", err)
+  )
+  .on("connect", (err) => {
+    console.info(
+      `Mit redis verbunde`
+    );
+  })
+  .connect();
+
+  let corsOptions = {
+    origin: "http://localhost:5173",
+    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+    credentials: true,
+    };
+
+   app.use(cors(corsOptions));
+
+
+
+const connection = mysql.createConnection({
+  host: "localhost",
+  user: "thien",
+  password: "Thien2811",
+  database: "todo",
+});
+
+connection.connect();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(
+  session({
+    store: new RedisStore({ client: redisClient }),
+    secret: '123123123123123123123',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+    },
+  })
+);
+
+// app.use((req, res, next) => {
+//   console.log(req.session.loggedIn)
+//   next();
+// })
+
+app.set("trust proxy", 1);
+
+app.get("/", (req, res) => {
+  res.send("Thiens ToDo!");
+});
+
+app.post("/savelist", (req, res) => {
+  fs.writeFile("lists.json", JSON.stringify(req.body), (err) => {
+    console.log("err", err);
+  });
+
+  res.status(200).end();
+});
+
+app.post("/savealllists", (req, res) => {
+  console.log(req.body.lists[0].listname);
+
+  connection.query(
+    `INSERT INTO tasks(listname) VALUES('${req.body.lists[0].listname}')`,
+    (error, results, fields) => {
+      if (error) throw error;
+      return;
+    }
+  );
+});
+
+app.post("/savedlogins", async (req, res) => {
+  req.body.login.password = await Bun.password.hash(req.body.login.password);
+
+  connection.query(
+    `INSERT INTO users(name, hash) VALUES('${req.body.login.username}', '${req.body.login.password}')`,
+    (error, results, fields) => {
+      if (error) {
+        if (error.code === "ER_DUP_ENTRY") {
+          res.status(409).end();
+          return;
+        }
+      }
+    }
+  );
+
+  res.status(200).end();
+});
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body.login;
+  connection.query(
+    `SELECT hash FROM users WHERE name='${username}'`,
+    async (error, results, fields) => {
+      if (error) throw error;
+      if (!results[0]) {
+        console.log("user nicht gefunden");
+        res.status(400).end();
+        return;
+      }
+      const match = await Bun.password.verify(password, results[0].hash);
+      if (match) {
+        console.log("eingeloggt");
+        res.status(200).end();
+      } else if (!match) {
+        console.log("falsches passwort");
+        res.status(403).end();
+      }
+    }
+  );
+});
+
+app.get("/getlistnames", (req, res) => {
+  connection.query(
+    `SELECT listname FROM lists WHERE username="thien"`,
+    (error, results, fields) => {
+      if (error) throw error;
+      res.status(200).json(results);
+    }
+  );
+});
+
+app.get("/taskdone", (req, res) => {
+  fs.readFile("lists.json", (err, data: any) => {
+    res.status(200).json(JSON.parse(data));
+  });
+});
+
+app.get("/list", (req, res) => {
+  fs.readFile("lists.json", (err, data: any) => {
+    res.status(200).json(JSON.parse(data));
+  });
+});
+
+app.listen(_port, () => {
+  console.log(`Server running on ${_port}`);
+});

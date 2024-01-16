@@ -1,0 +1,13 @@
+{
+  "logins": [
+    {
+      "test1": "$argon2id$v=19$m=65536,t=2,p=1$dtOomMcX37PiPCmjbnsyg6GkZqRKXhRW1CAZjyX5FDw$23SQ0Sxd7AD+CGU40mS0O1TPzP5FPViBI5YKFMGM5ew"
+    },
+    {
+      "test": "$argon2id$v=19$m=65536,t=2,p=1$JA3xr2qtLJQs7DWrprRx6l8kJIPddt2pK+G7wGU/iy0$pzv1O2vv49S+3pTHstMbdNuvs7GClUlUxvMgfUreUag"
+    },
+    {
+      "test": "$argon2id$v=19$m=65536,t=2,p=1$FK/BfT2SsKWNpcuPC6m7ZVuCppz9bEVTwFwe00aGnR8$QLi8uvkVzi7Czczjlq2Rvrd1w/6KndixcIXeScSq/fA"
+    }
+  ]
+}

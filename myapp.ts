@@ -5,6 +5,16 @@ import cors from "cors";
 
 require("dotenv").config();
 
+type Task = {
+  id: number;
+  listname: string;
+  taskname: string;
+  description: string;
+  user: string;
+  date: string;
+  priority: string;
+};
+
 const PORT = 5000;
 
 const app = express();
@@ -61,9 +71,9 @@ app.post("/gettasks", (req, res) => {
   );
 });
 
-app.delete("/task/:taskname", (req, res) => {
-  const taskname = req.params.taskname;
-  connection.query(`DELETE FROM tasks WHERE taskname='${taskname}'`);
+app.delete("/task/:id", (req, res) => {
+  const id = req.params.id;
+  connection.query(`DELETE FROM tasks WHERE id=${id}`);
   res.status(200).end();
 });
 
@@ -88,6 +98,20 @@ app.post("/addtask", (req, res) => {
 
   connection.query(
     `INSERT INTO tasks (listname, taskname, description, user, datum, priority) VALUES ('${data.listname}','${data.taskname}','${data.description}','${data.user}',${datum},'${data.priority}')`,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).json(results).end();
+    }
+  );
+});
+
+app.post("/save", (req, res) => {
+  const task: Task = req.body.task;
+  const datum = task.date
+    ? `"${task.date.split(".").reverse().join("-")}"`
+    : "NULL";
+  connection.query(
+    `UPDATE tasks SET taskname='${task.taskname}',description='${task.description}',user='${task.user}',datum=${datum},priority='${task.priority}' WHERE id=${task.id}`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();

@@ -103,6 +103,18 @@ app.get("/", (req, res) => {
   res.send("Thiens ToDo!");
 });
 
+app.post("/register", async (req, res) => {
+  const user = req.body.user[0];
+  user.password = await Bun.password.hash(req.body.user.password);
+  connection.query(
+    `INSERT INTO users (username,password) VALUES ('${user.username}','${user.password}')`,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).json(results).end();
+    }
+  );
+});
+
 app.post("/addlist", (req, res) => {
   const data = req.body.list[0];
   connection.query(

@@ -6,6 +6,7 @@ import session from "express-session";
 import redis from "redis";
 import RedisStore from "connect-redis";
 import cookieParser from "cookie-parser";
+import fs from "fs";
 
 require("dotenv").config();
 
@@ -307,6 +308,44 @@ app.post("/archivetask", (req, res) => {
       res.status(200).json(results).end;
     }
   );
+});
+
+app.post("/addtaskinfo", (req, res) => {
+  const data = req.body;
+  const date = data.datum.split(".").reverse().join("-");
+  connection.query(
+    `
+  UPDATE tasks SET taskname='${data.taskname}',description='${data.description}',user='${data.user}',datum='${date}',priority='${data.priority}' WHERE id='${data.id}'
+  `,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).json(results).end;
+    }
+  );
+});
+
+async function writeDataToJSON() {
+  const tasks = await query(
+    `
+  SELECT * FROM tasks
+  `
+  );
+  const lists = await query(`
+  SELECT * FROM lists
+  `);
+  const tags = await query(`
+  SELECT * FROM tags
+  `);
+
+  fs.writeFileSync(
+    "databaseinfo.json",
+    JSON.stringify({ tasks, lists, tags }, null, "\t")
+  );
+}
+
+app.get("/download", async (req, res) => {
+  await writeDataToJSON();
+  res.download("databaseinfo.json");
 });
 
 const server = app.listen(PORT, () => {

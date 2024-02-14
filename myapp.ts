@@ -30,6 +30,7 @@ type Task = {
   user: string;
   date: string;
   priority: string;
+  uuid: string;
 };
 
 const PORT = 5000;
@@ -144,6 +145,30 @@ app.post("/gettasks", (req, res) => {
   );
 });
 
+app.get("/tags/:id", (req, res) => {
+  const id = req.params.id;
+  connection.query(
+    `SELECT * FROM tags WHERE taskid='${id}'`,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).json(results).end();
+    }
+  );
+});
+
+app.post("/getduetasks", (req, res) => {
+  const currentDate = req.body.currentDate;
+  const datum = currentDate;
+  connection.query(
+    `SELECT * from tasks WHERE datum='${datum}'`,
+    (error, results) => {
+      if (error) throw error;
+
+      res.status(200).json(results).end();
+    }
+  );
+});
+
 // app.get("/login", (req, res) => {
 //   const dbUser = db.getuser;
 //   if (verified) {
@@ -179,21 +204,50 @@ app.delete("/deletelist/:deletedlistname", (req, res) => {
   );
 });
 
-app.post("/addtask", (req, res) => {
-  const data = req.body.task;
+// app.post("/addtask", (req, res) => {
+//   const data = req.body.task;
+//   console.log(req.body);
+//   const datum = data.datum
+//     ? `"${data.datum.split(".").reverse().join("-")}"`
+//     : "NULL";
 
-  const datum = data.date
-    ? `"${data.date.split(".").reverse().join("-")}"`
+//   connection.query(
+//     `INSERT INTO tasks (listname, taskname, description, user, datum, priority, uuid, deleted) VALUES ('${data.listname}','${data.taskname}','${data.description}','${data.user}',${datum},'${data.priority}','${data.uuid}', false)`,
+//     (error, results) => {
+//       if (error) throw error;
+//       res.status(200).json(results).end();
+//     }
+//   );
+// });
+
+app.post("/addtask", async (req, res) => {
+  const data = req.body.task;
+  console.log(req.body);
+  const datum = data.datum
+    ? `"${data.datum.split(".").reverse().join("-")}"`
     : "NULL";
 
-  connection.query(
-    `INSERT INTO tasks (listname, taskname, description, user, datum, priority, uuid) VALUES ('${data.listname}','${data.taskname}','${data.description}','${data.user}',${datum},'${data.priority}','${data.uuid}')`,
-    (error, results) => {
-      if (error) throw error;
-      res.status(200).json(results).end();
-    }
-  );
+  const id = (
+    await query(
+      `INSERT INTO tasks (listname, taskname, description, user, datum, priority, uuid, deleted) VALUES ('${data.listname}','${data.taskname}','${data.description}','${data.user}',${datum},'${data.priority}','${data.uuid}', false)`
+    )
+  ).insertId;
+  data.tags.forEach(async (el: { tagname: string }) => {
+    await query(
+      `INSERT INTO tags (tagname, taskid) VALUES ('${el.tagname}',${id})`
+    );
+  });
+  res.status(200).json({ insertId: id }).end();
 });
+
+async function query(query: string): Promise<any> {
+  return new Promise((resolve) => {
+    connection.query(query, (error, results) => {
+      if (error) throw error;
+      resolve(results);
+    });
+  });
+}
 
 app.post("/save", (req, res) => {
   const task: Task = req.body.task;
@@ -220,6 +274,38 @@ app.post("/savelistname", (req, res) => {
   );
   connection.query(
     `UPDATE tasks SET listname='${list.listname}' WHERE uuid='${list.id}'`
+  );
+});
+
+app.post("/updateprio", (req, res) => {
+  const data = req.body.taskname;
+  const datum = new Date().toLocaleString("de").split(",")[0];
+  const newDate = datum.split(".").reverse().join("-");
+  console.log(datum);
+  console.log(data);
+  connection.query(
+    `UPDATE tasks SET progress='DONE', datum='${newDate}' WHERE taskname='${data}' `
+  );
+});
+
+app.get("/finishedtasks", (req, res) => {
+  connection.query(
+    `SELECT * FROM tasks WHERE progress='DONE' AND deleted=false`,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).json(results).end();
+    }
+  );
+});
+
+app.post("/archivetask", (req, res) => {
+  const id = req.body.id;
+  connection.query(
+    `UPDATE tasks SET deleted=true WHERE id='${id}'`,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).json(results).end;
+    }
   );
 });
 

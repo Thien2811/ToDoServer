@@ -184,6 +184,7 @@ app.post("/getduetasks", (req, res) => {
 app.delete("/task/:id", (req, res) => {
   const id = req.params.id;
   connection.query(`DELETE FROM tasks WHERE id=${id}`);
+  connection.query(`DELETE FROM tags WHERE taskid=${id} `);
   res.status(200).end();
 });
 
@@ -223,7 +224,6 @@ app.delete("/deletelist/:deletedlistname", (req, res) => {
 
 app.post("/addtask", async (req, res) => {
   const data = req.body.task;
-  console.log(req.body);
   const datum = data.datum
     ? `"${data.datum.split(".").reverse().join("-")}"`
     : "NULL";
@@ -282,8 +282,6 @@ app.post("/updateprio", (req, res) => {
   const data = req.body.taskname;
   const datum = new Date().toLocaleString("de").split(",")[0];
   const newDate = datum.split(".").reverse().join("-");
-  console.log(datum);
-  console.log(data);
   connection.query(
     `UPDATE tasks SET progress='DONE', datum='${newDate}' WHERE taskname='${data}' `
   );
@@ -312,14 +310,29 @@ app.post("/archivetask", (req, res) => {
 
 app.post("/addtaskinfo", (req, res) => {
   const data = req.body;
+  if (data.progressnumber == null) {
+    data.progressnumber = 0;
+  }
   const date = data.datum.split(".").reverse().join("-");
   connection.query(
     `
-  UPDATE tasks SET taskname='${data.taskname}',description='${data.description}',user='${data.user}',datum='${date}',priority='${data.priority}' WHERE id='${data.id}'
+  UPDATE tasks SET taskname='${data.taskname}',description='${data.description}',user='${data.user}',datum='${date}',priority='${data.priority}',progressnumber='${data.progressnumber}' WHERE id='${data.id}'
   `,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end;
+    }
+  );
+});
+
+app.get("/getalltasks", (req, res) => {
+  connection.query(
+    `
+  SELECT * from tasks`,
+    (error, results) => {
+      if (error) throw error;
+      console.log(results);
+      res.status(200).json(results).end();
     }
   );
 });

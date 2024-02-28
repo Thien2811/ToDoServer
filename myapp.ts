@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mysql from "mysql";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import session from "express-session";
 import redis from "redis";
 import RedisStore from "connect-redis";
@@ -13,6 +13,7 @@ require("dotenv").config();
 declare module "express-session" {
   interface Session {
     user: User;
+    loggedIn: boolean;
   }
 }
 
@@ -20,7 +21,6 @@ type User = {
   id: number;
   name: string;
   passHash: string;
-  loggedIn: boolean;
 };
 
 type Task = {
@@ -51,55 +51,57 @@ const redisClient = await redis
   })
   .connect();
 
-const app = express();
-
-app.use(
-  session({
-    store: new RedisStore({ client: redisClient }),
-    secret: "123123123123123123123",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-    },
-  })
-);
-
 const connection = mysql.createConnection({
   host: "localhost",
   user: "thien",
   password: "Thien2811",
   database: "todo",
 });
-
 connection.connect();
 
-app.use(cors());
+const app = express();
 
-// app.use((req, res, next) => {
-//   console.log(req.path, "jetziger pfad");
-//   next();
-// });
+const sessionOptions = {
+  store: new RedisStore({ client: redisClient }),
+  secret: "1",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+};
 
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+app.use(session(sessionOptions));
+
+const corsOptions: CorsOptions = {
+  credentials: true,
+  origin: "http://localhost:9000",
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.static("./spa"));
 
 // app.use((req, res, next) => {
-//   if (!req.session.user?.loggedIn) {
-//     //nicht eingeloggt
-//     if (req.route === "/login") {
-//       //route ist ein login
+//   console.log(req.session.user);
+//   console.log(req.session.loggedIn);
+
+//   // sess.user.passHash = password;
+//   const allowedRoutes = ["/", "/login"];
+//   if (!req.session.loggedIn) {
+//     if (allowedRoutes.includes(req.url)) {
+//       res.status(200).end();
 //     } else {
 //       res.status(401).end();
-//       //request ist kein login
 //     }
 //   } else {
 //     next();
-//     //ist eingeloggt
 //   }
 // });
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
 app.get("/", (req, res) => {
   res.send("Thiens ToDo!");
@@ -113,6 +115,30 @@ app.post("/register", async (req, res) => {
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();
+    }
+  );
+});
+
+app.post("/login", (req, res) => {
+  const { user, password } = req.body;
+  connection.query(
+    `SELECT * FROM users WHERE username='${user}'`,
+    (error, results) => {
+      if (error) {
+        res.status(500).end();
+        throw error;
+      }
+      let check = false;
+      if (Bun.password.verify(password, results[0].password)) {
+        check = true;
+      }
+      if (check == true) {
+        req.session.user = user;
+        req.session.loggedIn = true;
+
+        console.log(req.session.loggedIn);
+        res.status(200).json({ user: req.session.user });
+      }
     }
   );
 });
@@ -139,6 +165,20 @@ app.post("/gettasks", (req, res) => {
   const data = req.body.url;
   connection.query(
     `SELECT * FROM tasks WHERE listname='${data}'`,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).json(results).end();
+    }
+  );
+});
+
+app.post("/changelist", (req, res) => {
+  const data = req.body;
+  console.log(data);
+  connection.query(
+    `
+  UPDATE tasks SET listname='${data.listname}' WHERE taskname='${data.taskname}'
+  `,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();

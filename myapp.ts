@@ -76,7 +76,7 @@ app.use(session(sessionOptions));
 
 const corsOptions: CorsOptions = {
   credentials: true,
-  origin: "http://localhost:9000",
+  origin: ["http://localhost:9000"],
 };
 
 app.use(cors(corsOptions));
@@ -84,10 +84,6 @@ app.use(cors(corsOptions));
 app.use(express.static("./spa"));
 
 // app.use((req, res, next) => {
-//   console.log(req.session.user);
-//   console.log(req.session.loggedIn);
-
-//   // sess.user.passHash = password;
 //   const allowedRoutes = ["/", "/login"];
 //   if (!req.session.loggedIn) {
 //     if (allowedRoutes.includes(req.url)) {
@@ -99,6 +95,14 @@ app.use(express.static("./spa"));
 //     next();
 //   }
 // });
+
+app.get("/isloggedin", (req, res) => {
+  if (req.session.loggedIn) {
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(403);
+  }
+});
 
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
@@ -327,6 +331,20 @@ app.post("/updateprio", (req, res) => {
   );
 });
 
+// app.post("/afterdrag", (req, res) => {
+//   const data = req.body.tasks;
+//   const listname = req.body.listname;
+//   console.log(data.length);
+//   // connection.query(`
+//   // DELETE FROM tasks WHERE listname='${listname}'`,(error, results) => {
+//   //   if(error) throw error
+//   //   res.status(200)
+//   // })
+//   for (let task of data) {
+//     connection.query();
+//   }
+// });
+
 app.get("/finishedtasks", (req, res) => {
   connection.query(
     `SELECT * FROM tasks WHERE progress='DONE' AND deleted=false`,
@@ -366,15 +384,22 @@ app.post("/addtaskinfo", (req, res) => {
 });
 
 app.get("/getalltasks", (req, res) => {
+  console.log("hallo");
   connection.query(
     `
   SELECT * from tasks`,
     (error, results) => {
       if (error) throw error;
-      console.log(results);
       res.status(200).json(results).end();
     }
   );
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) throw err;
+    res.status(200).end();
+  });
 });
 
 async function writeDataToJSON() {

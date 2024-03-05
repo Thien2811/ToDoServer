@@ -83,19 +83,6 @@ app.use(cors(corsOptions));
 
 app.use(express.static("./spa"));
 
-// app.use((req, res, next) => {
-//   const allowedRoutes = ["/", "/login"];
-//   if (!req.session.loggedIn) {
-//     if (allowedRoutes.includes(req.url)) {
-//       res.status(200).end();
-//     } else {
-//       res.status(401).end();
-//     }
-//   } else {
-//     next();
-//   }
-// });
-
 app.get("/isloggedin", (req, res) => {
   if (req.session.loggedIn) {
     res.sendStatus(200);
@@ -111,14 +98,35 @@ app.get("/", (req, res) => {
   res.send("Thiens ToDo!");
 });
 
+async function query(query: string): Promise<any> {
+  return new Promise((resolve) => {
+    connection.query(query, (error, results) => {
+      if (error) throw error;
+      resolve(results);
+    });
+  });
+}
+
 app.post("/register", async (req, res) => {
   const user = req.body.user[0];
   user.password = await Bun.password.hash(req.body.user.password);
   connection.query(
-    `INSERT INTO users (username,password) VALUES ('${user.username}','${user.password}')`,
+    `
+    SELECT * FROM users WHERE username='${user.username}'
+  `,
     (error, results) => {
       if (error) throw error;
-      res.status(200).json(results).end();
+      if (results.length > 0) {
+        res.status(409).end();
+      } else {
+        connection.query(
+          `INSERT INTO users (username,password) VALUES ('${user.username}','${user.password}')`,
+          (error, results) => {
+            if (error) throw error;
+            res.status(200).json(results).end();
+          }
+        );
+      }
     }
   );
 });
@@ -140,7 +148,6 @@ app.post("/login", (req, res) => {
         req.session.user = user;
         req.session.loggedIn = true;
 
-        console.log(req.session.loggedIn);
         res.status(200).json({ user: req.session.user });
       }
     }
@@ -150,7 +157,7 @@ app.post("/login", (req, res) => {
 app.post("/addlist", (req, res) => {
   const data = req.body.list[0];
   connection.query(
-    `INSERT INTO lists (listname, uuid) VALUES ('${data.listname}','${data.uuid}')`,
+    `INSERT INTO lists (listname, uuid, user) VALUES ('${data.listname}','${data.uuid}','${req.session.user}')`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();
@@ -159,16 +166,19 @@ app.post("/addlist", (req, res) => {
 });
 
 app.get("/getlistnames", (req, res) => {
-  connection.query(`SELECT listname,uuid FROM lists`, (error, results) => {
-    if (error) throw error;
-    res.status(200).json(results);
-  });
+  connection.query(
+    `SELECT listname,uuid FROM lists WHERE user='${req.session.user}'`,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).json(results);
+    }
+  );
 });
 
 app.post("/gettasks", (req, res) => {
   const data = req.body.url;
   connection.query(
-    `SELECT * FROM tasks WHERE listname='${data}'`,
+    `SELECT * FROM tasks WHERE listname='${data}' AND useraccount='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();
@@ -178,10 +188,9 @@ app.post("/gettasks", (req, res) => {
 
 app.post("/changelist", (req, res) => {
   const data = req.body;
-  console.log(data);
   connection.query(
     `
-  UPDATE tasks SET listname='${data.listname}' WHERE taskname='${data.taskname}'
+  UPDATE tasks SET listname='${data.listname}' WHERE taskname='${data.taskname}' AND user='${req.session.user}'
   `,
     (error, results) => {
       if (error) throw error;
@@ -193,78 +202,66 @@ app.post("/changelist", (req, res) => {
 app.get("/tags/:id", (req, res) => {
   const id = req.params.id;
   connection.query(
-    `SELECT * FROM tags WHERE taskid='${id}'`,
+    `SELECT * FROM tags WHERE taskid='${id}' AND user='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();
     }
   );
+});
+
+app.post("/getweatherdata", (req, res) => {
+  const data = req.body.condition;
+  const weatherdata = JSON.parse(
+    fs.readFileSync(
+      "/home/thien2811/Documents/azubi-aufgaben/uebungen/todo_typescript/myapp/data/conditions.json",
+      "utf8"
+    )
+  );
+  res.json(weatherdata[data]);
 });
 
 app.post("/getduetasks", (req, res) => {
+  const user = req.session.user;
   const currentDate = req.body.currentDate;
   const datum = currentDate;
   connection.query(
-    `SELECT * from tasks WHERE datum='${datum}'`,
+    `SELECT * from tasks WHERE datum='${datum}' AND useraccount='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
-
       res.status(200).json(results).end();
     }
   );
 });
 
-// app.get("/login", (req, res) => {
-//   const dbUser = db.getuser;
-//   if (verified) {
-//     req.session.user = {
-//       id: dbUser.id,
-//       name: dbUser.name,
-//       pass_hash: dbUser.pass_hash,
-//     };
-//   }
-// });
-
 app.delete("/task/:id", (req, res) => {
   const id = req.params.id;
-  connection.query(`DELETE FROM tasks WHERE id=${id}`);
-  connection.query(`DELETE FROM tags WHERE taskid=${id} `);
+  connection.query(
+    `DELETE FROM tasks WHERE id=${id} AND useraccount='${req.session.user}'`
+  );
+  connection.query(
+    `DELETE FROM tags WHERE taskid=${id} AND user='${req.session.user}' `
+  );
   res.status(200).end();
 });
 
 app.delete("/deletelist/:deletedlistname", (req, res) => {
   const data = req.params.deletedlistname;
   connection.query(
-    `DELETE FROM lists WHERE listname='${data}'`,
+    `DELETE FROM lists WHERE listname='${data}' AND user='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();
     }
   );
   connection.query(
-    `DELETE FROM tasks WHERE listname='${data}'`,
+    `DELETE FROM tasks WHERE listname='${data}' and useraccount='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();
     }
   );
 });
-
-// app.post("/addtask", (req, res) => {
-//   const data = req.body.task;
-//   console.log(req.body);
-//   const datum = data.datum
-//     ? `"${data.datum.split(".").reverse().join("-")}"`
-//     : "NULL";
-
-//   connection.query(
-//     `INSERT INTO tasks (listname, taskname, description, user, datum, priority, uuid, deleted) VALUES ('${data.listname}','${data.taskname}','${data.description}','${data.user}',${datum},'${data.priority}','${data.uuid}', false)`,
-//     (error, results) => {
-//       if (error) throw error;
-//       res.status(200).json(results).end();
-//     }
-//   );
-// });
 
 app.post("/addtask", async (req, res) => {
   const data = req.body.task;
@@ -274,25 +271,16 @@ app.post("/addtask", async (req, res) => {
 
   const id = (
     await query(
-      `INSERT INTO tasks (listname, taskname, description, user, datum, priority, uuid, deleted) VALUES ('${data.listname}','${data.taskname}','${data.description}','${data.user}',${datum},'${data.priority}','${data.uuid}', false)`
+      `INSERT INTO tasks (listname, taskname, description, user, datum, priority, uuid, deleted, useraccount) VALUES ('${data.listname}','${data.taskname}','${data.description}','${data.user}',${datum},'${data.priority}','${data.uuid}', false, '${req.session.user}')`
     )
   ).insertId;
   data.tags.forEach(async (el: { tagname: string }) => {
     await query(
-      `INSERT INTO tags (tagname, taskid) VALUES ('${el.tagname}',${id})`
+      `INSERT INTO tags (tagname, taskid, user) VALUES ('${el.tagname}',${id},'${req.session.user}')`
     );
   });
   res.status(200).json({ insertId: id }).end();
 });
-
-async function query(query: string): Promise<any> {
-  return new Promise((resolve) => {
-    connection.query(query, (error, results) => {
-      if (error) throw error;
-      resolve(results);
-    });
-  });
-}
 
 app.post("/save", (req, res) => {
   const task: Task = req.body.task;
@@ -300,7 +288,7 @@ app.post("/save", (req, res) => {
     ? `"${task.date.split(".").reverse().join("-")}"`
     : "NULL";
   connection.query(
-    `UPDATE tasks SET taskname='${task.taskname}',description='${task.description}',user='${task.user}',datum=${datum},priority='${task.priority}',uuid='${task.uuid}' WHERE id=${task.id}`,
+    `UPDATE tasks SET taskname='${task.taskname}',description='${task.description}',user='${task.user}',datum=${datum},priority='${task.priority}',uuid='${task.uuid}' WHERE id=${task.id} and useraccount='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();
@@ -311,14 +299,14 @@ app.post("/save", (req, res) => {
 app.post("/savelistname", (req, res) => {
   const list = req.body;
   connection.query(
-    `UPDATE lists SET listname='${list.listname}' WHERE uuid='${list.id}'`,
+    `UPDATE lists SET listname='${list.listname}' WHERE uuid='${list.id}' AND user='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();
     }
   );
   connection.query(
-    `UPDATE tasks SET listname='${list.listname}' WHERE uuid='${list.id}'`
+    `UPDATE tasks SET listname='${list.listname}' WHERE uuid='${list.id}' AND useraccount='${req.session.user}'`
   );
 });
 
@@ -327,27 +315,13 @@ app.post("/updateprio", (req, res) => {
   const datum = new Date().toLocaleString("de").split(",")[0];
   const newDate = datum.split(".").reverse().join("-");
   connection.query(
-    `UPDATE tasks SET progress='DONE', datum='${newDate}' WHERE taskname='${data}' `
+    `UPDATE tasks SET progress='DONE', datum='${newDate}' WHERE taskname='${data}' AND useraccount='${req.session.user}'`
   );
 });
 
-// app.post("/afterdrag", (req, res) => {
-//   const data = req.body.tasks;
-//   const listname = req.body.listname;
-//   console.log(data.length);
-//   // connection.query(`
-//   // DELETE FROM tasks WHERE listname='${listname}'`,(error, results) => {
-//   //   if(error) throw error
-//   //   res.status(200)
-//   // })
-//   for (let task of data) {
-//     connection.query();
-//   }
-// });
-
 app.get("/finishedtasks", (req, res) => {
   connection.query(
-    `SELECT * FROM tasks WHERE progress='DONE' AND deleted=false`,
+    `SELECT * FROM tasks WHERE progress='DONE' AND deleted=false AND useraccount='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();
@@ -358,7 +332,7 @@ app.get("/finishedtasks", (req, res) => {
 app.post("/archivetask", (req, res) => {
   const id = req.body.id;
   connection.query(
-    `UPDATE tasks SET deleted=true WHERE id='${id}'`,
+    `UPDATE tasks SET deleted=true WHERE id='${id}' AND useraccount='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end;
@@ -374,7 +348,7 @@ app.post("/addtaskinfo", (req, res) => {
   const date = data.datum.split(".").reverse().join("-");
   connection.query(
     `
-  UPDATE tasks SET taskname='${data.taskname}',description='${data.description}',user='${data.user}',datum='${date}',priority='${data.priority}',progressnumber='${data.progressnumber}' WHERE id='${data.id}'
+  UPDATE tasks SET taskname='${data.taskname}',description='${data.description}',user='${data.user}',datum='${date}',priority='${data.priority}',progressnumber='${data.progressnumber}' WHERE id='${data.id}' AND useraccount='${req.session.user}'
   `,
     (error, results) => {
       if (error) throw error;
@@ -384,10 +358,9 @@ app.post("/addtaskinfo", (req, res) => {
 });
 
 app.get("/getalltasks", (req, res) => {
-  console.log("hallo");
   connection.query(
     `
-  SELECT * from tasks`,
+  SELECT * from tasks WHERE useraccount='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results).end();

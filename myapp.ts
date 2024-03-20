@@ -167,10 +167,36 @@ app.post("/addlist", (req, res) => {
 
 app.get("/getlistnames", (req, res) => {
   connection.query(
-    `SELECT listname,uuid FROM lists WHERE user='${req.session.user}'`,
+    `SELECT listname,uuid,hex FROM lists WHERE user='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
       res.status(200).json(results);
+    }
+  );
+});
+
+app.post("/color", (req, res) => {
+  const data = req.body;
+  connection.query(
+    `
+    UPDATE lists SET hex='${data.hex}' WHERE uuid='${data.uuid}'
+  `,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).end();
+    }
+  );
+});
+
+app.post("/getcolor", (req, res) => {
+  const data = req.body.uuid;
+  connection.query(
+    `
+    SELECT * FROM lists WHERE uuid='${data}'
+  `,
+    (error, results) => {
+      if (error) throw error;
+      res.status(200).json(results).end();
     }
   );
 });
@@ -181,6 +207,11 @@ app.post("/gettasks", (req, res) => {
     `SELECT * FROM tasks WHERE listname='${data}' AND useraccount='${req.session.user}'`,
     (error, results) => {
       if (error) throw error;
+      if (results.length != 0) {
+        results[0].user = results[0].user.split(",");
+      } else {
+        results = [];
+      }
       res.status(200).json(results).end();
     }
   );

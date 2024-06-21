@@ -1,479 +1,272 @@
 {
 	"tasks": [
 		{
-			"id": 323,
-			"listname": "Arbeit",
-			"taskname": "34",
-			"description": "",
-			"user": "Zugehörige Person",
-			"datum": "2024-02-28T23:00:00.000Z",
-			"priority": "Priorität",
-			"uuid": "ef1e0bf0-150b-4043-993a-ad518e6b7bf2",
-			"progress": null,
-			"deleted": 0
-		},
-		{
-			"id": 324,
-			"listname": "Arbeit",
-			"taskname": "test2 ",
-			"description": "",
-			"user": "Zugehörige Person",
-			"datum": "2024-02-13T23:00:00.000Z",
-			"priority": "Priorität",
-			"uuid": "ef1e0bf0-150b-4043-993a-ad518e6b7bf2",
-			"progress": "DONE",
-			"deleted": 0
-		},
-		{
-			"id": 325,
-			"listname": "Arbeit",
-			"taskname": "blabla ",
-			"description": "123123123",
+			"id": 398,
+			"listname": "123123",
+			"taskname": "123 123123",
+			"description": "44444",
 			"user": "Thien",
-			"datum": "2024-02-27T23:00:00.000Z",
-			"priority": "Hoch",
-			"uuid": "ef1e0bf0-150b-4043-993a-ad518e6b7bf2",
+			"datum": "2024-03-03T23:00:00.000Z",
+			"priority": "Ja",
+			"uuid": "8292805a-2fef-4fc2-917a-8d906d0062de",
 			"progress": null,
-			"deleted": 0
+			"deleted": 0,
+			"progressnumber": 50,
+			"useraccount": "test"
+		},
+		{
+			"id": 407,
+			"listname": "Hallo",
+			"taskname": "123123",
+			"description": "",
+			"user": "Thien,Daniel R.,Andi",
+			"datum": "2024-03-19T23:00:00.000Z",
+			"priority": "Priorität",
+			"uuid": "d3512574-6f04-4607-a3f9-f8028dac0003",
+			"progress": null,
+			"deleted": 0,
+			"progressnumber": 0,
+			"useraccount": "Thien2811"
+		},
+		{
+			"id": 408,
+			"listname": "123123",
+			"taskname": "123123",
+			"description": "1123122321",
+			"user": "Thien,Daniel R.",
+			"datum": "2024-03-19T23:00:00.000Z",
+			"priority": "Priorität",
+			"uuid": "4443ee39-08b9-410d-8c10-ee97ff705e7b",
+			"progress": null,
+			"deleted": 0,
+			"progressnumber": 0,
+			"useraccount": "Thien2811"
+		},
+		{
+			"id": 409,
+			"listname": "123",
+			"taskname": "123123",
+			"description": "",
+			"user": "",
+			"datum": "2024-03-19T23:00:00.000Z",
+			"priority": "Priorität",
+			"uuid": "4443ee39-08b9-410d-8c10-ee97ff705e7b",
+			"progress": null,
+			"deleted": 0,
+			"progressnumber": 0,
+			"useraccount": "Thien2811"
 		}
 	],
 	"lists": [
 		{
-			"id": 270,
-			"listname": "Arbeit",
-			"uuid": "ef1e0bf0-150b-4043-993a-ad518e6b7bf2"
+			"id": 289,
+			"listname": "123",
+			"uuid": "8292805a-2fef-4fc2-917a-8d906d0062de",
+			"user": "test",
+			"hex": null
 		},
 		{
-			"id": 271,
-			"listname": "3333",
-			"uuid": "0f8ea76a-b9b5-4d5d-92c2-b17b5709e9a7"
+			"id": 291,
+			"listname": "123123",
+			"uuid": "8e96a155-1eaa-4226-8dc2-7c3c030e0eab",
+			"user": "test",
+			"hex": null
+		},
+		{
+			"id": 305,
+			"listname": "123",
+			"uuid": "4443ee39-08b9-410d-8c10-ee97ff705e7b",
+			"user": "Thien2811",
+			"hex": "#e09292"
+		},
+		{
+			"id": 306,
+			"listname": "123123",
+			"uuid": "66a03e7b-5aea-4827-9d7c-9b810ba37b13",
+			"user": "Thien2811",
+			"hex": "#2fbd6a"
 		}
 	],
 	"tags": [
 		{
-			"id": 1,
+			"id": 90,
 			"tagname": "tag1 ",
-			"taskid": 273
+			"taskid": 328,
+			"user": null
 		},
 		{
-			"id": 2,
-			"tagname": "tag2",
-			"taskid": 273
-		},
-		{
-			"id": 3,
-			"tagname": "tag1 ",
-			"taskid": 274
-		},
-		{
-			"id": 4,
+			"id": 91,
 			"tagname": "tag2 ",
-			"taskid": 274
+			"taskid": 328,
+			"user": null
 		},
 		{
-			"id": 5,
-			"tagname": "apfelschorle",
-			"taskid": 274
-		},
-		{
-			"id": 6,
+			"id": 92,
 			"tagname": "tag1 ",
-			"taskid": 275
+			"taskid": 329,
+			"user": null
 		},
 		{
-			"id": 7,
+			"id": 93,
 			"tagname": "tag2 ",
-			"taskid": 275
+			"taskid": 329,
+			"user": null
 		},
 		{
-			"id": 8,
-			"tagname": "apfelschorle @1 januar 2024",
-			"taskid": 275
-		},
-		{
-			"id": 9,
-			"tagname": "tag1 ",
-			"taskid": 276
-		},
-		{
-			"id": 10,
-			"tagname": "tag2",
-			"taskid": 276
-		},
-		{
-			"id": 11,
-			"tagname": "hallo ",
-			"taskid": 277
-		},
-		{
-			"id": 12,
-			"tagname": "wiegehts",
-			"taskid": 277
-		},
-		{
-			"id": 13,
-			"tagname": "hallo ",
-			"taskid": 278
-		},
-		{
-			"id": 14,
-			"tagname": "wiegehts",
-			"taskid": 278
-		},
-		{
-			"id": 15,
+			"id": 94,
 			"tagname": "wie ",
-			"taskid": 280
+			"taskid": 339,
+			"user": null
 		},
 		{
-			"id": 16,
-			"tagname": "gehts @in 2 weeks",
-			"taskid": 280
-		},
-		{
-			"id": 17,
-			"tagname": "hallo",
-			"taskid": 281
-		},
-		{
-			"id": 18,
-			"tagname": "in 2 weeks",
-			"taskid": 286
-		},
-		{
-			"id": 19,
-			"tagname": "tag1 ",
-			"taskid": 289
-		},
-		{
-			"id": 20,
-			"tagname": "tag2 @in 2 weeks",
-			"taskid": 289
-		},
-		{
-			"id": 21,
-			"tagname": "tag1 ",
-			"taskid": 290
-		},
-		{
-			"id": 22,
-			"tagname": "tag2 @in 2 weeks",
-			"taskid": 290
-		},
-		{
-			"id": 23,
-			"tagname": "#tag1",
-			"taskid": 291
-		},
-		{
-			"id": 24,
-			"tagname": "#tag2",
-			"taskid": 291
-		},
-		{
-			"id": 25,
-			"tagname": "#tag1",
-			"taskid": 292
-		},
-		{
-			"id": 26,
-			"tagname": "#tag2",
-			"taskid": 292
-		},
-		{
-			"id": 27,
-			"tagname": "tag1 ",
-			"taskid": 293
-		},
-		{
-			"id": 28,
-			"tagname": "tag2 ",
-			"taskid": 293
-		},
-		{
-			"id": 29,
-			"tagname": "wie ",
-			"taskid": 294
-		},
-		{
-			"id": 30,
-			"tagname": "gehts @in 2 weeks",
-			"taskid": 294
-		},
-		{
-			"id": 31,
-			"tagname": "wie ",
-			"taskid": 296
-		},
-		{
-			"id": 32,
-			"tagname": "gehts @in 2 weeks",
-			"taskid": 296
-		},
-		{
-			"id": 33,
-			"tagname": "wie ",
-			"taskid": 297
-		},
-		{
-			"id": 34,
-			"tagname": "gehts @in 2 weeks",
-			"taskid": 297
-		},
-		{
-			"id": 35,
-			"tagname": "tag ",
-			"taskid": 298
-		},
-		{
-			"id": 36,
-			"tagname": "tag @in 2 weeks",
-			"taskid": 298
-		},
-		{
-			"id": 37,
-			"tagname": "wie ",
-			"taskid": 299
-		},
-		{
-			"id": 38,
+			"id": 95,
 			"tagname": "gehts ",
-			"taskid": 299
+			"taskid": 339,
+			"user": null
 		},
 		{
-			"id": 39,
-			"tagname": "",
-			"taskid": 300
-		},
-		{
-			"id": 40,
-			"tagname": "",
-			"taskid": 301
-		},
-		{
-			"id": 41,
+			"id": 96,
 			"tagname": "tag1 ",
-			"taskid": 302
+			"taskid": 341,
+			"user": null
 		},
 		{
-			"id": 42,
+			"id": 97,
 			"tagname": "tag2 ",
-			"taskid": 302
+			"taskid": 341,
+			"user": null
 		},
 		{
-			"id": 43,
+			"id": 98,
 			"tagname": "tag1 ",
-			"taskid": 303
+			"taskid": 342,
+			"user": null
 		},
 		{
-			"id": 44,
+			"id": 99,
 			"tagname": "tag2 ",
-			"taskid": 303
+			"taskid": 342,
+			"user": null
 		},
 		{
-			"id": 45,
-			"tagname": "tag1 ",
-			"taskid": 304
+			"id": 100,
+			"tagname": "wie ",
+			"taskid": 343,
+			"user": null
 		},
 		{
-			"id": 46,
-			"tagname": "tag2",
-			"taskid": 304
+			"id": 101,
+			"tagname": "gehts ",
+			"taskid": 343,
+			"user": null
 		},
 		{
-			"id": 47,
-			"tagname": "[object Object]",
-			"taskid": 305
+			"id": 102,
+			"tagname": "bla ",
+			"taskid": 344,
+			"user": null
 		},
 		{
-			"id": 48,
-			"tagname": "[object Object]",
-			"taskid": 305
+			"id": 103,
+			"tagname": "bla ",
+			"taskid": 344,
+			"user": null
 		},
 		{
-			"id": 49,
-			"tagname": "[object Object]",
-			"taskid": 306
-		},
-		{
-			"id": 50,
-			"tagname": "[object Object]",
-			"taskid": 306
-		},
-		{
-			"id": 51,
-			"tagname": "tag1 ",
-			"taskid": 307
-		},
-		{
-			"id": 52,
-			"tagname": "tag2 ",
-			"taskid": 307
-		},
-		{
-			"id": 53,
-			"tagname": "tag1 ",
-			"taskid": 308
-		},
-		{
-			"id": 54,
-			"tagname": "tag2 ",
-			"taskid": 308
-		},
-		{
-			"id": 55,
-			"tagname": "tag3 ",
-			"taskid": 308
-		},
-		{
-			"id": 56,
-			"tagname": "tag1 ",
-			"taskid": 309
-		},
-		{
-			"id": 57,
-			"tagname": "tag2 ",
-			"taskid": 309
-		},
-		{
-			"id": 58,
-			"tagname": "tag3 ",
-			"taskid": 309
-		},
-		{
-			"id": 59,
-			"tagname": "tag1 ",
-			"taskid": 310
-		},
-		{
-			"id": 60,
-			"tagname": "tag2 ",
-			"taskid": 310
-		},
-		{
-			"id": 61,
-			"tagname": "tag1 ",
-			"taskid": 314
-		},
-		{
-			"id": 62,
-			"tagname": "tag2 ",
-			"taskid": 314
-		},
-		{
-			"id": 63,
-			"tagname": "tag1 ",
-			"taskid": 315
-		},
-		{
-			"id": 64,
-			"tagname": "tag2 ",
-			"taskid": 315
-		},
-		{
-			"id": 65,
-			"tagname": "test1 ",
-			"taskid": 316
-		},
-		{
-			"id": 66,
-			"tagname": "test2 ",
-			"taskid": 316
-		},
-		{
-			"id": 67,
-			"tagname": "test1 ",
-			"taskid": 317
-		},
-		{
-			"id": 68,
-			"tagname": "test2 ",
-			"taskid": 317
-		},
-		{
-			"id": 69,
-			"tagname": "test1 ",
-			"taskid": 318
-		},
-		{
-			"id": 70,
-			"tagname": "test2 ",
-			"taskid": 318
-		},
-		{
-			"id": 71,
-			"tagname": "test1 ",
-			"taskid": 319
-		},
-		{
-			"id": 72,
-			"tagname": "test2 ",
-			"taskid": 319
-		},
-		{
-			"id": 73,
+			"id": 104,
 			"tagname": "tag ",
-			"taskid": 320
+			"taskid": 345,
+			"user": null
 		},
 		{
-			"id": 74,
-			"tagname": "tag2 ",
-			"taskid": 320
-		},
-		{
-			"id": 75,
-			"tagname": "tag1 ",
-			"taskid": 321
-		},
-		{
-			"id": 76,
-			"tagname": "tag2 ",
-			"taskid": 321
-		},
-		{
-			"id": 77,
-			"tagname": "tag3 ",
-			"taskid": 321
-		},
-		{
-			"id": 78,
+			"id": 105,
 			"tagname": "tag ",
-			"taskid": 322
+			"taskid": 345,
+			"user": null
 		},
 		{
-			"id": 79,
-			"tagname": "tasdas ",
-			"taskid": 322
+			"id": 106,
+			"tagname": "tag ",
+			"taskid": 346,
+			"user": null
 		},
 		{
-			"id": 80,
-			"tagname": "tag1 ",
-			"taskid": 323
+			"id": 107,
+			"tagname": "tag ",
+			"taskid": 346,
+			"user": null
 		},
 		{
-			"id": 81,
-			"tagname": "tag2 ",
-			"taskid": 323
+			"id": 110,
+			"tagname": "dir ",
+			"taskid": 349,
+			"user": null
 		},
 		{
-			"id": 82,
-			"tagname": "tag1 ",
-			"taskid": 324
+			"id": 111,
+			"tagname": "heute ",
+			"taskid": 349,
+			"user": null
 		},
 		{
-			"id": 83,
-			"tagname": "tag2 ",
-			"taskid": 324
+			"id": 140,
+			"tagname": "wichtig ",
+			"taskid": 381,
+			"user": null
 		},
 		{
-			"id": 84,
-			"tagname": "tag1 ",
-			"taskid": 325
+			"id": 141,
+			"tagname": "dasdas ",
+			"taskid": 381,
+			"user": null
 		},
 		{
-			"id": 85,
-			"tagname": "tag2 ",
-			"taskid": 325
+			"id": 143,
+			"tagname": "wichtig ",
+			"taskid": 388,
+			"user": null
+		},
+		{
+			"id": 144,
+			"tagname": "nichtsowichtig ",
+			"taskid": 389,
+			"user": null
+		},
+		{
+			"id": 145,
+			"tagname": "wichtig ",
+			"taskid": 390,
+			"user": null
+		},
+		{
+			"id": 147,
+			"tagname": "wichtig ",
+			"taskid": 393,
+			"user": null
+		},
+		{
+			"id": 148,
+			"tagname": "wichtig ",
+			"taskid": 394,
+			"user": null
+		},
+		{
+			"id": 150,
+			"tagname": "tag ",
+			"taskid": 398,
+			"user": "test"
+		},
+		{
+			"id": 151,
+			"tagname": "wiegehts ",
+			"taskid": 400,
+			"user": "Thien2811"
+		},
+		{
+			"id": 153,
+			"tagname": "wiegehts ",
+			"taskid": 402,
+			"user": "Thien2811"
 		}
 	]
 }

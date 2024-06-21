@@ -25,6 +25,7 @@
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
     "mysql": "^2.18.1",
+    "pocketbase": "^0.21.3",
     "redis": "^4.6.12",
     "typescript": "^5.0.0"
   },

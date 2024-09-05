@@ -1,12 +1,14 @@
-import express from "express";
 import bodyParser from "body-parser";
-import mysql from "mysql";
-import cors, { CorsOptions } from "cors";
-import session from "express-session";
-import redis from "redis";
 import RedisStore from "connect-redis";
-import cookieParser from "cookie-parser";
+import cors, { CorsOptions } from "cors";
+import express from "express";
+import session from "express-session";
 import fs from "fs";
+import mysql from "mysql";
+import redis from "redis";
+import PocketBase, { type RecordAuthResponse } from 'pocketbase'
+import { addTask, getTasks } from "./pb-handlers/task-handlers";
+import { addList, deleteList, getListnames, updateColor, updateListname } from "./pb-handlers/list-handlers";
 
 require("dotenv").config();
 
@@ -16,6 +18,8 @@ declare module "express-session" {
     loggedIn: boolean;
   }
 }
+
+const pb = new PocketBase('http://127.0.0.1:8090')
 
 type User = {
   id: number;
@@ -154,39 +158,24 @@ app.post("/login", (req, res) => {
   );
 });
 
-app.post("/addlist", (req, res) => {
-  const data = req.body.list[0];
-  connection.query(
-    `INSERT INTO lists (listname, uuid, user) VALUES ('${data.listname}','${data.uuid}','${req.session.user}')`,
-    (error, results) => {
-      if (error) throw error;
-      res.status(200).json(results).end();
-    }
-  );
-});
+app.post('/addlist', addList)
 
-app.get("/getlistnames", (req, res) => {
-  connection.query(
-    `SELECT listname,uuid,hex FROM lists WHERE user='${req.session.user}'`,
-    (error, results) => {
-      if (error) throw error;
-      res.status(200).json(results);
-    }
-  );
-});
+app.get('/getlistnames', getListnames)
 
-app.post("/color", (req, res) => {
-  const data = req.body;
-  connection.query(
-    `
-    UPDATE lists SET hex='${data.hex}' WHERE uuid='${data.uuid}'
-  `,
-    (error, results) => {
-      if (error) throw error;
-      res.status(200).end();
-    }
-  );
-});
+// app.post("/color", (req, res) => {
+//   const data = req.body;
+//   connection.query(
+//     `
+//     UPDATE lists SET hex='${data.hex}' WHERE uuid='${data.uuid}'
+//   `,
+//     (error, results) => {
+//       if (error) throw error;
+//       res.status(200).end();
+//     }
+//   );
+// });
+
+app.put('/color', updateColor)
 
 app.post("/getcolor", (req, res) => {
   const data = req.body.uuid;
@@ -201,21 +190,7 @@ app.post("/getcolor", (req, res) => {
   );
 });
 
-app.post("/gettasks", (req, res) => {
-  const data = req.body.url;
-  connection.query(
-    `SELECT * FROM tasks WHERE listname='${data}' AND useraccount='${req.session.user}'`,
-    (error, results) => {
-      if (error) throw error;
-      if (results.length != 0) {
-        results[0].user = results[0].user.split(",");
-      } else {
-        results = [];
-      }
-      res.status(200).json(results).end();
-    }
-  );
-});
+app.get('/gettasks/:url', getTasks)
 
 app.post("/changelist", (req, res) => {
   const data = req.body;
@@ -276,42 +251,9 @@ app.delete("/task/:id", (req, res) => {
   res.status(200).end();
 });
 
-app.delete("/deletelist/:deletedlistname", (req, res) => {
-  const data = req.params.deletedlistname;
-  connection.query(
-    `DELETE FROM lists WHERE listname='${data}' AND user='${req.session.user}'`,
-    (error, results) => {
-      if (error) throw error;
-      res.status(200).json(results).end();
-    }
-  );
-  connection.query(
-    `DELETE FROM tasks WHERE listname='${data}' and useraccount='${req.session.user}'`,
-    (error, results) => {
-      if (error) throw error;
-      res.status(200).json(results).end();
-    }
-  );
-});
+app.delete('/list/:id', deleteList)
 
-app.post("/addtask", async (req, res) => {
-  const data = req.body.task;
-  const datum = data.datum
-    ? `"${data.datum.split(".").reverse().join("-")}"`
-    : "NULL";
-
-  const id = (
-    await query(
-      `INSERT INTO tasks (listname, taskname, description, user, datum, priority, uuid, deleted, useraccount) VALUES ('${data.listname}','${data.taskname}','${data.description}','${data.user}',${datum},'${data.priority}','${data.uuid}', false, '${req.session.user}')`
-    )
-  ).insertId;
-  data.tags.forEach(async (el: { tagname: string }) => {
-    await query(
-      `INSERT INTO tags (tagname, taskid, user) VALUES ('${el.tagname}',${id},'${req.session.user}')`
-    );
-  });
-  res.status(200).json({ insertId: id }).end();
-});
+app.post('/addtask', addTask)
 
 app.post("/save", (req, res) => {
   const task: Task = req.body.task;
@@ -340,6 +282,8 @@ app.post("/savelistname", (req, res) => {
     `UPDATE tasks SET listname='${list.listname}' WHERE uuid='${list.id}' AND useraccount='${req.session.user}'`
   );
 });
+
+app.put('/listname/:id/:listname', updateListname)
 
 app.post("/updateprio", (req, res) => {
   const data = req.body.taskname;

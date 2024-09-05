@@ -3,6 +3,6 @@
    "target": "ESNext",
    "module": "ESNext",
    "moduleResolution": "Node",
-   "allowSyntheticDefaultImports": true
+   "allowSyntheticDefaultImports": true,
   }
 }

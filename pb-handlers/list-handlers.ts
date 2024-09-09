@@ -1,5 +1,5 @@
-import PocketBase, { type RecordModel } from "pocketbase";
 import { type Request, type Response } from "express";
+import PocketBase from "pocketbase";
 import { List } from "../../todowithtypescript/src/types/types";
 
 const pb = new PocketBase("http://127.0.0.1:8090/");
@@ -30,7 +30,7 @@ export async function getListnames(req: Request, res: Response){
         const allLists = await pb.collection('lists').getFullList({
             filter: `user = '${req.session.user}'`
         })
-
+        
         res.status(200).json(allLists).end()
     } catch(e) {
         console.log(e)
@@ -66,6 +66,13 @@ export async function updateColor(req: Request, res: Response){
 
     const {id, hex} = req.body
 
-    console.log(hex, id)
+    try{
+        await pb.collection('lists').update(id, {hex: hex})
+
+        res.status(200).end()
+    } catch(e) {
+        console.log(e)
+        res.status(500).end()
+    }
 
 }

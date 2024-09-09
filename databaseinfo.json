@@ -1,271 +1,87 @@
 {
 	"tasks": [
 		{
-			"id": 398,
-			"listname": "123123",
-			"taskname": "123 123123",
-			"description": "44444",
-			"user": "Thien",
-			"datum": "2024-03-03T23:00:00.000Z",
-			"priority": "Ja",
-			"uuid": "8292805a-2fef-4fc2-917a-8d906d0062de",
-			"progress": null,
-			"deleted": 0,
-			"progressnumber": 50,
-			"useraccount": "test"
-		},
-		{
-			"id": 407,
-			"listname": "Hallo",
-			"taskname": "123123",
+			"collectionId": "t3bqrqh6qcq5h2c",
+			"collectionName": "task",
+			"created": "2024-09-09 12:55:06.668Z",
+			"datum": "2024-09-09 00:00:00.000Z",
+			"deleted": false,
 			"description": "",
-			"user": "Thien,Daniel R.,Andi",
-			"datum": "2024-03-19T23:00:00.000Z",
-			"priority": "Priorität",
-			"uuid": "d3512574-6f04-4607-a3f9-f8028dac0003",
-			"progress": null,
-			"deleted": 0,
+			"id": "xsby77yqpqc66kw",
+			"listname": "zrdzasd",
+			"priority": false,
+			"progress": 0,
 			"progressnumber": 0,
+			"tags": [
+				{
+					"tagname": "wiegehts "
+				}
+			],
+			"taskname": "hallo ",
+			"updated": "2024-09-09 12:55:06.668Z",
+			"user": [],
 			"useraccount": "Thien2811"
 		},
 		{
-			"id": 408,
-			"listname": "123123",
-			"taskname": "123123",
-			"description": "1123122321",
-			"user": "Thien,Daniel R.",
-			"datum": "2024-03-19T23:00:00.000Z",
-			"priority": "Priorität",
-			"uuid": "4443ee39-08b9-410d-8c10-ee97ff705e7b",
-			"progress": null,
-			"deleted": 0,
+			"collectionId": "t3bqrqh6qcq5h2c",
+			"collectionName": "task",
+			"created": "2024-09-09 12:55:22.005Z",
+			"datum": "2024-09-10 00:00:00.000Z",
+			"deleted": false,
+			"description": "",
+			"id": "frvwesfk9zvcoqm",
+			"listname": "zrdzasd",
+			"priority": false,
+			"progress": 0,
 			"progressnumber": 0,
+			"tags": [
+				{
+					"tagname": "dir "
+				}
+			],
+			"taskname": "wiegehts ",
+			"updated": "2024-09-09 12:55:22.005Z",
+			"user": [],
 			"useraccount": "Thien2811"
 		},
 		{
-			"id": 409,
-			"listname": "123",
-			"taskname": "123123",
+			"collectionId": "t3bqrqh6qcq5h2c",
+			"collectionName": "task",
+			"created": "2024-09-09 12:55:43.294Z",
+			"datum": "2024-09-08 00:00:00.000Z",
+			"deleted": false,
 			"description": "",
-			"user": "",
-			"datum": "2024-03-19T23:00:00.000Z",
-			"priority": "Priorität",
-			"uuid": "4443ee39-08b9-410d-8c10-ee97ff705e7b",
-			"progress": null,
-			"deleted": 0,
-			"progressnumber": 0,
+			"id": "sk4svpqv4i3iuj5",
+			"listname": "zrdzasd",
+			"priority": false,
+			"progress": 1,
+			"progressnumber": 100,
+			"tags": [],
+			"taskname": "gut ",
+			"updated": "2024-09-09 12:56:07.979Z",
+			"user": [],
 			"useraccount": "Thien2811"
 		}
 	],
 	"lists": [
 		{
-			"id": 289,
-			"listname": "123",
-			"uuid": "8292805a-2fef-4fc2-917a-8d906d0062de",
-			"user": "test",
-			"hex": null
-		},
-		{
-			"id": 291,
-			"listname": "123123",
-			"uuid": "8e96a155-1eaa-4226-8dc2-7c3c030e0eab",
-			"user": "test",
-			"hex": null
-		},
-		{
-			"id": 305,
-			"listname": "123",
-			"uuid": "4443ee39-08b9-410d-8c10-ee97ff705e7b",
-			"user": "Thien2811",
-			"hex": "#e09292"
-		},
-		{
-			"id": 306,
-			"listname": "123123",
-			"uuid": "66a03e7b-5aea-4827-9d7c-9b810ba37b13",
-			"user": "Thien2811",
-			"hex": "#2fbd6a"
-		}
-	],
-	"tags": [
-		{
-			"id": 90,
-			"tagname": "tag1 ",
-			"taskid": 328,
-			"user": null
-		},
-		{
-			"id": 91,
-			"tagname": "tag2 ",
-			"taskid": 328,
-			"user": null
-		},
-		{
-			"id": 92,
-			"tagname": "tag1 ",
-			"taskid": 329,
-			"user": null
-		},
-		{
-			"id": 93,
-			"tagname": "tag2 ",
-			"taskid": 329,
-			"user": null
-		},
-		{
-			"id": 94,
-			"tagname": "wie ",
-			"taskid": 339,
-			"user": null
-		},
-		{
-			"id": 95,
-			"tagname": "gehts ",
-			"taskid": 339,
-			"user": null
-		},
-		{
-			"id": 96,
-			"tagname": "tag1 ",
-			"taskid": 341,
-			"user": null
-		},
-		{
-			"id": 97,
-			"tagname": "tag2 ",
-			"taskid": 341,
-			"user": null
-		},
-		{
-			"id": 98,
-			"tagname": "tag1 ",
-			"taskid": 342,
-			"user": null
-		},
-		{
-			"id": 99,
-			"tagname": "tag2 ",
-			"taskid": 342,
-			"user": null
-		},
-		{
-			"id": 100,
-			"tagname": "wie ",
-			"taskid": 343,
-			"user": null
-		},
-		{
-			"id": 101,
-			"tagname": "gehts ",
-			"taskid": 343,
-			"user": null
-		},
-		{
-			"id": 102,
-			"tagname": "bla ",
-			"taskid": 344,
-			"user": null
-		},
-		{
-			"id": 103,
-			"tagname": "bla ",
-			"taskid": 344,
-			"user": null
-		},
-		{
-			"id": 104,
-			"tagname": "tag ",
-			"taskid": 345,
-			"user": null
-		},
-		{
-			"id": 105,
-			"tagname": "tag ",
-			"taskid": 345,
-			"user": null
-		},
-		{
-			"id": 106,
-			"tagname": "tag ",
-			"taskid": 346,
-			"user": null
-		},
-		{
-			"id": 107,
-			"tagname": "tag ",
-			"taskid": 346,
-			"user": null
-		},
-		{
-			"id": 110,
-			"tagname": "dir ",
-			"taskid": 349,
-			"user": null
-		},
-		{
-			"id": 111,
-			"tagname": "heute ",
-			"taskid": 349,
-			"user": null
-		},
-		{
-			"id": 140,
-			"tagname": "wichtig ",
-			"taskid": 381,
-			"user": null
-		},
-		{
-			"id": 141,
-			"tagname": "dasdas ",
-			"taskid": 381,
-			"user": null
-		},
-		{
-			"id": 143,
-			"tagname": "wichtig ",
-			"taskid": 388,
-			"user": null
-		},
-		{
-			"id": 144,
-			"tagname": "nichtsowichtig ",
-			"taskid": 389,
-			"user": null
-		},
-		{
-			"id": 145,
-			"tagname": "wichtig ",
-			"taskid": 390,
-			"user": null
-		},
-		{
-			"id": 147,
-			"tagname": "wichtig ",
-			"taskid": 393,
-			"user": null
-		},
-		{
-			"id": 148,
-			"tagname": "wichtig ",
-			"taskid": 394,
-			"user": null
-		},
-		{
-			"id": 150,
-			"tagname": "tag ",
-			"taskid": 398,
-			"user": "test"
-		},
-		{
-			"id": 151,
-			"tagname": "wiegehts ",
-			"taskid": 400,
+			"collectionId": "c9hvu4qmtzn2rkj",
+			"collectionName": "lists",
+			"created": "2024-09-03 14:14:20.688Z",
+			"hex": "#7d012d",
+			"id": "3prxis87zontqx8",
+			"listname": "zrdzasd",
+			"updated": "2024-09-05 06:27:04.524Z",
 			"user": "Thien2811"
 		},
 		{
-			"id": 153,
-			"tagname": "wiegehts ",
-			"taskid": 402,
+			"collectionId": "c9hvu4qmtzn2rkj",
+			"collectionName": "lists",
+			"created": "2024-09-06 05:32:58.422Z",
+			"hex": "#f8bbd0",
+			"id": "47hzaqgc28g1c7w",
+			"listname": "blabla",
+			"updated": "2024-09-06 05:32:58.422Z",
 			"user": "Thien2811"
 		}
 	]
